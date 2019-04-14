@@ -42,7 +42,7 @@ public class LexController {
 		System.out.println(s);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+//		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 		ResponseEntity<byte[]> responseEntity = new ResponseEntity<byte[]>(createdLex.getResponseContent(),headers,HttpStatus.OK);
 		return responseEntity;
 	}

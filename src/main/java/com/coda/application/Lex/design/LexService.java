@@ -40,7 +40,7 @@ private static List<LexStreamingData> lexList1 = new ArrayList<LexStreamingData>
 				.withRegion(Regions.US_EAST_1).build();
 		PostContentRequest contentRequest = new PostContentRequest();
 		contentRequest.setBotName("BookTrip");
-		contentRequest.setAccept("audio/pcm");
+		contentRequest.setAccept("audio/mpeg");
 		contentRequest.setContentType("audio/x-l16; sample-rate=16000; channel-count=1");
 		contentRequest.setInputStream(lexInputContentStream);
 		contentRequest.setBotAlias("Dev");
