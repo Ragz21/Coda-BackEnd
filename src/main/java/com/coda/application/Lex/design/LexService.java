@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.regions.Regions;
@@ -15,29 +16,33 @@ import com.amazonaws.services.lexruntime.model.PostContentRequest;
 import com.amazonaws.services.lexruntime.model.PostContentResult;
 import com.amazonaws.util.IOUtils;
 
-
 @Service
 public class LexService {
-private static List<LexData> lexList = new ArrayList<LexData>();
-private static List<LexStreamingData> lexList1 = new ArrayList<LexStreamingData>();
-	
+	private static List<LexData> lexList = new ArrayList<LexData>();
+	private static List<LexStreamingData> lexList1 = new ArrayList<LexStreamingData>();
+
+	@Autowired
+	private LexRepo LexRepo;
+
 	public List<LexData> findAll() {
 		System.out.println(lexList);
 		return lexList;
 	}
+
 	public LexData save(LexData lexData) {
 		lexList.add(lexData);
-		return lexData;	
+		return lexData;
 	}
+
 	public LexStreamingData saveStream(LexStreamingData lexData) {
 		lexList1.add(lexData);
-		return lexData;	
+//		LexRepo.save(lexData);
+		return lexData;
 	}
-	
+
 	public LexStreamingData lexCall(byte[] lexInputContent) throws IOException {
 		InputStream lexInputContentStream = new ByteArrayInputStream(lexInputContent);
-		AmazonLexRuntime client = AmazonLexRuntimeClientBuilder.standard()
-				.withRegion(Regions.US_EAST_1).build();
+		AmazonLexRuntime client = AmazonLexRuntimeClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
 		PostContentRequest contentRequest = new PostContentRequest();
 		contentRequest.setBotName("BookTrip");
 		contentRequest.setAccept("audio/mpeg");
@@ -51,15 +56,16 @@ private static List<LexStreamingData> lexList1 = new ArrayList<LexStreamingData>
 		LexData lexData = new LexData();
 		lexData.setRequestContent(resultContent.getInputTranscript());
 		LexStreamingData streamingData = new LexStreamingData(lexInputContent, lexOutputContent);
-		if(resultContent.getDialogState().startsWith("Elicit")) 
+		if (resultContent.getDialogState().startsWith("Elicit"))
 			lexData.setResponseContent(resultContent.getMessage());
 		else if (resultContent.getDialogState().equals("ReadyForFulfillment"))
-			lexData.setResponseContent(String.format("%s: %s", resultContent.getIntentName(), resultContent.getSlots()));
+			lexData.setResponseContent(
+					String.format("%s: %s", resultContent.getIntentName(), resultContent.getSlots()));
 		else
 			lexData.setResponseContent(resultContent.toString());
 		save(lexData);
 		System.out.println(lexData.getResponseContent());
 		return streamingData;
-		}
+	}
 
 }
