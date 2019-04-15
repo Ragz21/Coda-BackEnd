@@ -1,5 +1,7 @@
 package com.coda.application.Lex.design;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,12 +19,15 @@ public class LexStreamingData {
 	@Column(name = "response_content")
 	private byte[] responseContent;
 	
+	protected LexStreamingData() {
+		super();
+	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
-	private int id;
+	private Integer id;
 	
-	protected LexStreamingData(byte[] requestContent, byte[] responseContent) {
+	public LexStreamingData(byte[] requestContent, byte[] responseContent) {
 		super();
 		this.requestContent = requestContent;
 		this.responseContent = responseContent;
@@ -38,6 +43,11 @@ public class LexStreamingData {
 	}
 	public void setResponseContent(byte[] responseContent) {
 		this.responseContent = responseContent;
+	}
+	@Override
+	public String toString() {
+		return "LexStreamingData [requestContent=" + Arrays.toString(requestContent) + ", responseContent="
+				+ Arrays.toString(responseContent) + "]";
 	}
 	
 	

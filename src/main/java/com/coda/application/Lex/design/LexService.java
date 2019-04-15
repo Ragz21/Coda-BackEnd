@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.regions.Regions;
@@ -24,9 +26,8 @@ public class LexService {
 	@Autowired
 	private LexRepo LexRepo;
 
-	public List<LexData> findAll() {
-		System.out.println(lexList);
-		return lexList;
+	public Page<LexStreamingData> findAll(int page) {	
+		return LexRepo.findAll(PageRequest.of(page, 3));
 	}
 
 	public LexData save(LexData lexData) {
@@ -36,7 +37,7 @@ public class LexService {
 
 	public LexStreamingData saveStream(LexStreamingData lexData) {
 		lexList1.add(lexData);
-//		LexRepo.save(lexData);
+		LexRepo.save(lexData);
 		return lexData;
 	}
 
