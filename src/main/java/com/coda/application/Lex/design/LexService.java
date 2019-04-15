@@ -26,8 +26,8 @@ public class LexService {
 	@Autowired
 	private LexRepo LexRepo;
 
-	public Page<LexStreamingData> findAll(int page) {	
-		return LexRepo.findAll(PageRequest.of(page, 3));
+	public Page<LexStreamingData> findAll(int page, int size) {	
+		return LexRepo.findAll(PageRequest.of(page, size));
 	}
 
 	public LexData save(LexData lexData) {

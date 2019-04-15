@@ -23,8 +23,8 @@ public class LexController {
 	private LexService lexService;
 	
 	@GetMapping("users")
-	public Page<LexStreamingData> getAllTodos(@RequestParam(defaultValue = "0") int page) {
-		return lexService.findAll(page);
+	public Page<LexStreamingData> getAllTodos(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "0") int size) {
+		return lexService.findAll(page,size);
 	}
 	
 	@PostMapping("users")
