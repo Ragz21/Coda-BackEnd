@@ -41,8 +41,8 @@ public class LexService {
 		return lexData;
 	}
 
-	public LexStreamingData lexCall(byte[] lexInputContent) throws IOException {
-		InputStream lexInputContentStream = new ByteArrayInputStream(lexInputContent);
+	public LexStreamingData lexCall(byte[] lexInputByteContent) throws IOException {
+		InputStream lexInputContentStream = new ByteArrayInputStream(lexInputByteContent);
 		AmazonLexRuntime client = AmazonLexRuntimeClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
 		PostContentRequest contentRequest = new PostContentRequest();
 		contentRequest.setBotName("BookTrip");
@@ -56,7 +56,7 @@ public class LexService {
 		System.out.println(lexOutputContent);
 		LexData lexData = new LexData();
 		lexData.setRequestContent(resultContent.getInputTranscript());
-		LexStreamingData streamingData = new LexStreamingData(lexInputContent, lexOutputContent);
+		LexStreamingData streamingData = new LexStreamingData(lexInputByteContent, lexOutputContent);
 		if (resultContent.getDialogState().startsWith("Elicit"))
 			lexData.setResponseContent(resultContent.getMessage());
 		else if (resultContent.getDialogState().equals("ReadyForFulfillment"))
