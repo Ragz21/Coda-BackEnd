@@ -45,23 +45,24 @@ public class LexService {
 		InputStream lexInputContentStream = new ByteArrayInputStream(lexInputByteContent);
 		AmazonLexRuntime client = AmazonLexRuntimeClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
 		PostContentRequest contentRequest = new PostContentRequest();
-		contentRequest.setBotName("BookTrip");
+		contentRequest.setBotName("TodaysWeather");
 		contentRequest.setAccept("audio/mpeg");
 		contentRequest.setContentType("audio/x-l16; sample-rate=16000; channel-count=1");
 		contentRequest.setInputStream(lexInputContentStream);
-		contentRequest.setBotAlias("Dev");
+		contentRequest.setBotAlias("Test");
 		contentRequest.setUserId("testuser");
 		PostContentResult resultContent = client.postContent(contentRequest);
-		byte[] lexOutputContent = IOUtils.toByteArray(resultContent.getAudioStream());
-		System.out.println(lexOutputContent);
 		LexData lexData = new LexData();
 		lexData.setRequestContent(resultContent.getInputTranscript());
-		LexStreamingData streamingData = new LexStreamingData(lexInputByteContent, lexOutputContent);
-		if (resultContent.getDialogState().startsWith("Elicit"))
+		LexStreamingData streamingData = new LexStreamingData();
+		byte[] lexOutputContent = IOUtils.toByteArray(resultContent.getAudioStream());
+		streamingData.setRequestContent(lexInputByteContent);
+		streamingData.setResponseContent(lexOutputContent);
+		if (resultContent.getDialogState().startsWith("Elicit") || resultContent.getDialogState().startsWith("ConfirmIntent")) {
 			lexData.setResponseContent(resultContent.getMessage());
+		}
 		else if (resultContent.getDialogState().equals("ReadyForFulfillment"))
-			lexData.setResponseContent(
-					String.format("%s: %s", resultContent.getIntentName(), resultContent.getSlots()));
+			lexData.setResponseContent(String.format("%s: %s", resultContent.getIntentName(), resultContent.getSlots()));
 		else
 			lexData.setResponseContent(resultContent.toString());
 		save(lexData);
