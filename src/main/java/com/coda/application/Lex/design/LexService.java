@@ -25,22 +25,26 @@ public class LexService {
 
 	@Autowired
 	private LexRepo LexRepo;
-
+	
+	//Pagination at back-end
 	public Page<LexStreamingData> findAll(int page, int size) {	
 		return LexRepo.findAll(PageRequest.of(page, size));
 	}
-
+	
+	//Did it for text doesn't have a DB 
 	public LexData save(LexData lexData) {
 		lexList.add(lexData);
 		return lexData;
 	}
-
+	
+	//Storing in DB
 	public LexStreamingData saveStream(LexStreamingData lexData) {
 		lexList1.add(lexData);
 		LexRepo.save(lexData);
 		return lexData;
 	}
-
+	
+	//Calling lex here
 	public LexStreamingData lexCall(byte[] lexInputByteContent) throws IOException {
 		InputStream lexInputContentStream = new ByteArrayInputStream(lexInputByteContent);
 		AmazonLexRuntime client = AmazonLexRuntimeClientBuilder.standard().withRegion(Regions.US_EAST_1).build();

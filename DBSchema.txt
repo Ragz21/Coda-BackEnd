@@ -1,0 +1,5 @@
+CREATE DATABASE CODA;
+
+use CODA;
+
+create table lexdata(id int auto_increment primary key ,request_content longblob, response_content longblob);
